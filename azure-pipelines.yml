@@ -1,8 +1,6 @@
 variables:
 - name: BuildParameters.RestoreBuildProjects
   value: '**/*.csproj'
-- name: BuildParameters.TestProjects
-  value: '**/*[Tt]ests/*.csproj'
 name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:
@@ -22,12 +20,12 @@ jobs:
       command: restore
       projects: $(BuildParameters.RestoreBuildProjects)
   - task: DotNetCoreCLI@1
-    displayName: Build
+    displayName: 'Build $(BuildConfiguration)'
     inputs:
       projects: $(BuildParameters.RestoreBuildProjects)
       arguments: --configuration $(BuildConfiguration)
   - task: DotNetCoreCLI@1
-    displayName: Test
+    displayName: 'Test $(BuildConfiguration)'
     inputs:
       command: test
       projects: $(BuildParameters.RestoreBuildProjects)
@@ -35,7 +33,7 @@ jobs:
   - task: DotNetCoreCLI@1
     displayName: Publish
     inputs:
-      command: publish
+      command: 'publish $(BuildConfiguration)'
       publishWebProjects: false
       projects: $(BuildParameters.RestoreBuildProjects)
       arguments: --configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)
