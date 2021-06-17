@@ -9,30 +9,32 @@ pool:
  
 steps:
 - task: DotNetCoreCLI@2
+  displayName: Restore
   inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-  displayName: 'Restore Nuget Packages'
- 
+    command: restore
+    projects: '$(Parameters.RestoreBuildProjects)'
+    vstsFeed: 'e1e8c5f8-8a93-486a-975a-3238e5d37c93'
 - task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--no-restore'
-  displayName: 'Build projects'
- 
+    projects: '$(Parameters.RestoreBuildProjects)'
+    arguments: '--configuration $(BuildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: Test
   inputs:
-    command: 'test'
-    projects: '**/.csproj'
-    arguments: '--no-restore --no-build'
-  displayName: 'Run Tests'
- 
+    command: test
+    projects: '$(Parameters.TestProjects)'
+    arguments: '--configuration $(BuildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: Publish
   inputs:
-    command: 'publish'
+    command: publish
     publishWebProjects: false
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
-    modifyOutputPath: false
-  displayName: 'Publish'
+    projects: '$(Parameters.RestoreBuildProjects)'
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: True
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
