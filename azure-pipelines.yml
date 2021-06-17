@@ -30,7 +30,7 @@ jobs:
     displayName: Test
     inputs:
       command: test
-      projects: $(BuildParameters.TestProjects)
+      projects: $(BuildParameters.RestoreBuildProjects)
       arguments: --configuration $(BuildConfiguration)
   - task: DotNetCoreCLI@1
     displayName: Publish
