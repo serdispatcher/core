@@ -16,14 +16,14 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: 'samples/dotnet-runtimeinfo/*.csproj'
+    projects: 'samples/dotnetsay/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
   displayName: 'Build'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: 'samples/dotnet-runtimeinfo/*.csproj'
+    projects: 'samples/dotnetsay/*.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
   displayName: 'Publish'
 - task: PublishBuildArtifacts@1
