@@ -9,8 +9,10 @@ trigger:
 pool:
   vmImage: windows-latest
 
-variables:
-  buildConfiguration: 'Release'
+  variables:
+    BuildConfiguration: 'Release'
+    RestoreBuildProjects: '**/*.csproj'
+    TestProjects: '**/*[Tt]ests/*.csproj'
 
 steps:
 - task: DotNetCoreCLI@2
