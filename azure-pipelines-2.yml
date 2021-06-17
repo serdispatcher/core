@@ -9,12 +9,6 @@ pool:
  
 steps:
 - task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: '$(Parameters.RestoreBuildProjects)'
-    vstsFeed: 'e1e8c5f8-8a93-486a-975a-3238e5d37c93'
-- task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     projects: '$(Parameters.RestoreBuildProjects)'
