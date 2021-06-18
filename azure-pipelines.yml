@@ -12,8 +12,10 @@ resources:
 jobs:
 - job: Job_1
   displayName: Agent job 1
+
   pool:
     vmImage: vs2017-win2016
+
   steps:
   - checkout: self
   - task: DotNetCoreCLI@1
