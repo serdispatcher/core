@@ -1,12 +1,14 @@
 variables:
-- name: BuildParameters.RestoreBuildProjects
-  value: '**/*.csproj'
+  BuildParameters.RestoreBuildProjects: '**/*.csproj'
+  buildConfiguration: 'Release'
+
 name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:
   - repository: self
     type: git
     ref: main
+
 jobs:
 - job: Job_1
   displayName: Agent job 1
@@ -19,12 +21,9 @@ jobs:
     inputs:
       command: restore
       projects: $(BuildParameters.RestoreBuildProjects)
-  - task: PowerShell@2
+  - script:
     displayName: Build
-    inputs:
-      targetType: 'inline'
-      script: |
-        dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration Release
+      dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration $(BuildParameters.BuildConfiguration)
   - task: DotNetCoreCLI@1
     displayName: Publish
     inputs:
