@@ -20,16 +20,11 @@ jobs:
       command: restore
       projects: $(BuildParameters.RestoreBuildProjects)
   - task: PowerShell@2
+    displayName: Build
     inputs:
       targetType: 'inline'
       script: |
-        dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration $(BuildConfiguration)
-  - task: DotNetCoreCLI@1
-    displayName: Test
-    inputs:
-      command: test
-      projects: $(BuildParameters.RestoreBuildProjects)
-      arguments: --configuration $(BuildConfiguration)
+        dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration Release
   - task: DotNetCoreCLI@1
     displayName: Publish
     inputs:
@@ -44,4 +39,3 @@ jobs:
     inputs:
       PathtoPublish: $(build.artifactstagingdirectory)
       TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'
-...
