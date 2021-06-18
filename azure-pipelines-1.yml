@@ -1,21 +1,35 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-- main
+# Build ASP.NET Core project using Azure Pipelines
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core?view=vsts
 
 pool:
-  vmImage: windows-latest
-
+  vmImage: 'vs2017-win2016'
+ 
 variables:
   buildConfiguration: 'Release'
 
 steps:
+- script: |
+    dotnet build --configuration $(buildConfiguration) # Include additional options such as --configuration to meet your need
+    dotnet test dotnetcore-tests --configuration $(buildConfiguration) --logger trx
+    dotnet publish --configuration $(buildConfiguration) --output $BUILD_ARTIFACTSTAGINGDIRECTORY
+    dotnet tool install  --tool-path . dotnetsay 
+    ./dotnetsay # Executing the command on linux platforms
+  displayName: 'Command Line Script'    
+
+# .NET Core
+# Restore NuGet packages.
+# I am using the restore command to restore packages from a custom feed just in case ..
+# But the - script: dotnet restore section code is also valid here.
 - task: DotNetCoreCLI@2
-  displayName: 'Install dotnetsay'
   inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g dotnetsay'
+    command: 'restore'
+    projects: '**/*.csproj'
+    #verbosityRestore: 'detailed' # Options: quiet, minimal, normal, detailed, diagnostic
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+
+- task: PublishBuildArtifacts@1
