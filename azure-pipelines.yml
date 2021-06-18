@@ -23,7 +23,7 @@ jobs:
       projects: $(BuildParameters.RestoreBuildProjects)
   - script:
     displayName: Build
-      dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration $(BuildParameters.BuildConfiguration)
+      dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration $(BuildConfiguration)
   - task: DotNetCoreCLI@1
     displayName: Publish
     inputs:
