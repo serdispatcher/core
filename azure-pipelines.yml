@@ -19,11 +19,11 @@ jobs:
     inputs:
       command: restore
       projects: $(BuildParameters.RestoreBuildProjects)
-  - task: DotNetCoreCLI@1
-    displayName: Build
+  - task: PowerShell@2
     inputs:
-      projects: $(BuildParameters.RestoreBuildProjects)
-      arguments: --configuration $(BuildConfiguration)
+      targetType: 'inline'
+      script: |
+        dotnet build --project $(BuildParameters.RestoreBuildProjects) --configuration $(BuildConfiguration)
   - task: DotNetCoreCLI@1
     displayName: Test
     inputs:
