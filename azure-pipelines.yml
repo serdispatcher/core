@@ -21,7 +21,6 @@ jobs:
     inputs:
       command: restore
       projects: $(BuildParameters.RestoreBuildProjects)
-  - script:
   - task: DotNetCoreCLI@1
     displayName: Build
     inputs:
